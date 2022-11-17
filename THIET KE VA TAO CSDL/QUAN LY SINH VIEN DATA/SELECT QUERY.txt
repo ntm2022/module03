@@ -1,0 +1,3 @@
+#show all student
+SELECT *
+FROM Student;
