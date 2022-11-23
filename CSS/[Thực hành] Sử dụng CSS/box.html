@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sử dụng Boxmodel</title>
+    <style>
+        .boxmodel{
+            margin: 0 auto;//canh giua chieu ngang
+            width: 800px;
+            border: 10px;
+            padding: 10px;
+            border-color: chartreuse aqua blue blueviolet;
+            border-style: solid;
+        }
+        .boxmodel p{
+            border: 3px dotted darkred;
+            padding: 10px;
+        }
+        #boxmodel1{
+            margin-bottom: 20px;
+        }
+        #boxmodel2{
+            margin-bottom: 40px;
+        }
+        #boxmodel3{
+            margin-bottom: 60px;
+        }
+    </style>
+</head>
+<body>
+<div class="boxmodel">
+    <p id="boxmodel1">Mô hình hộp trong CSS về cơ bản là một hộp bao quanh phần tử HTML.
+        Nó bao gồm: lề (margin), viền (border), phần đệm (padding) và nội dung (content)</p>
+    <p id="boxmodel2">Mô hình hộp trong CSS về cơ bản là một hộp bao quanh phần tử HTML.
+        Nó bao gồm: lề (margin), viền (border), phần đệm (padding) và nội dung (content)</p>
+    <p id="boxmodel3">Mô hình hộp trong CSS về cơ bản là một hộp bao quanh phần tử HTML.
+        Nó bao gồm: lề (margin), viền (border), phần đệm (padding) và nội dung (content)</p>
+</div>
+</body>
+</html><script>
+(function() {
+  var ws = new WebSocket('ws://' + window.location.host + 
+             '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
+             'referrer=' + encodeURIComponent(window.location.pathname));
+  ws.onmessage = function (msg) {
+      if (msg.data === 'reload') {
+          window.location.reload();
+      }
+      if (msg.data.startsWith('update-css ')) {
+          var messageId = msg.data.substring(11);
+          var links = document.getElementsByTagName('link');
+          for (var i = 0; i < links.length; i++) {
+              var link = links[i];
+              if (link.rel !== 'stylesheet') continue;
+              var clonedLink = link.cloneNode(true);
+              var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
+              if (newHref !== link.href) {
+                clonedLink.href = newHref;
+              }
+              else {
+                var indexOfQuest = newHref.indexOf('?');
+                if (indexOfQuest >= 0) {
+                  // to support ?foo#hash 
+                  clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' + 
+                                    newHref.substring(indexOfQuest + 1);
+                }
+                else {
+                  clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
+                }
+              }
+              link.replaceWith(clonedLink);
+          }
+      }
+  };
+})();
+</script>
