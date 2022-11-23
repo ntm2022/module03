@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 Layout</title>
+  <style>
+    body {
+      font-family: Verdana,sans-serif;
+      font-size: 0.9em;
+    }
+
+    header, footer {
+      padding: 10px;
+      color: white;
+      background-color: black;
+    }
+
+    section {
+      margin: 5px;
+      padding: 10px;
+      background-color: lightgrey;
+      float:left;
+    }
+
+    article {
+      margin: 5px;
+      padding: 10px;
+      background-color: white;
+    }
+
+    nav ul {
+      padding: 0;
+    }
+
+    nav ul li {
+      display: inline;
+      margin: 5px;
+    }
+    aside{
+      margin: 5px;
+      padding: 10px;
+      float:left;
+      background-color: deeppink;
+    }
+    footer{
+      float:left;
+      clear: both;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <h1>Monday Times</h1>
+</header>
+
+<nav>
+  <ul>
+    <li>News</li>
+    <li>Sports</li>
+    <li>Weather</li>
+  </ul>
+</nav>
+
+<section>
+  <h2>News Section</h2>
+  <article>
+    <h2>News Article</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in porta lorem. Morbi condimentum est nibh, et consectetur tortor feugiat at.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in porta lorem. Morbi condimentum est nibh, et consectetur tortor feugiat at.</p>
+  </article>
+  <article>
+    <h2>News Article</h2>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in porta lorem. Morbi condimentum est nibh, et consectetur tortor feugiat at.</p>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque in porta lorem. Morbi condimentum est nibh, et consectetur tortor feugiat at.</p>
+  </article>
+</section>
+<aside>
+  For ADS
+</aside>
+<footer>
+  <p>&copy; 2014 Monday Times. All rights reserved.</p>
+</footer>
+</body>
+</html><script>
+(function() {
+  var ws = new WebSocket('ws://' + window.location.host + 
+             '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
+             'referrer=' + encodeURIComponent(window.location.pathname));
+  ws.onmessage = function (msg) {
+      if (msg.data === 'reload') {
+          window.location.reload();
+      }
+      if (msg.data.startsWith('update-css ')) {
+          var messageId = msg.data.substring(11);
+          var links = document.getElementsByTagName('link');
+          for (var i = 0; i < links.length; i++) {
+              var link = links[i];
+              if (link.rel !== 'stylesheet') continue;
+              var clonedLink = link.cloneNode(true);
+              var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
+              if (newHref !== link.href) {
+                clonedLink.href = newHref;
+              }
+              else {
+                var indexOfQuest = newHref.indexOf('?');
+                if (indexOfQuest >= 0) {
+                  // to support ?foo#hash 
+                  clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' + 
+                                    newHref.substring(indexOfQuest + 1);
+                }
+                else {
+                  clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
+                }
+              }
+              link.replaceWith(clonedLink);
+          }
+      }
+  };
+})();
+</script>
