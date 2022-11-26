@@ -1,0 +1,19 @@
+00-New Project
+Template->Web Application
+Build System: Gradle
+JDK 17 corretto
+
+01-Dependencies
+compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+=>chạy con cá voi
+
+02-XÓA HelloServlet.java hoặc:
+/*import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;*/
+
+và import các class tương ứng
+
+03-Xóa Deployment-Application Context của Tomcat
+
+04-Tạo Servlet tương ứng với link từ file .jsp
+=>sửa value khớp với tham số của .jsp
