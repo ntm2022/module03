@@ -3,10 +3,11 @@
 + Template->Web Application
 + Build System: Gradle
 + JDK 17 corretto
++ version: Java EE 8
 
 01-Dependencies
 compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-=>chạy con cá voi
+=>chạy CON VOI
 
 02-XÓA HelloServlet.java hoặc: (do HelloServlet được tạo ra với dependencies cũ nên sai thư viện)
 /*import jakarta.servlet.http.*;
@@ -21,3 +22,13 @@ và import các class tương ứng
 
 05-UNICODE phần VIEW
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+//fix lỗi UNICODE
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html; charset=UTF-8");
+06-FIX lỗi JSTL
+    // https://mvnrepository.com/artifact/javax.servlet/jstl
+    implementation group: 'javax.servlet', name: 'jstl', version: '1.2'
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
