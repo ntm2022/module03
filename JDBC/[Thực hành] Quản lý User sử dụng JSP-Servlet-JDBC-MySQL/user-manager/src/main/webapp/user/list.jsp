@@ -24,7 +24,7 @@
         <caption><h2>List of Users</h2></caption>
         <tr>
             <th>ID</th>
-            <th>Name</th>
+            <th><a href="/users?action=sortname">Name</a></th>
             <th>Email</th>
             <th>Country</th>
             <th>Actions</th>
@@ -41,7 +41,20 @@
                 </td>
             </tr>
         </c:forEach>
+
     </table>
+    <div id="ultilities" style="display:inline-block;">
+        <form method="post" action="/users?action=search">
+
+            <fieldset>
+                <legend>Search By Country</legend>
+                <table>
+                    <tr><td><input type="text" name="txtCountry"></td><td><input type="submit" value="SEARCH"></td></tr>
+                </table>
+            </fieldset>
+
+        </form>
+    </div>
 </div>
 </body>
 </html>

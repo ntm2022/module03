@@ -44,6 +44,8 @@ public class UserServlet extends HttpServlet {
                 case "delete":
                     deleteUser(request, response);
                     break;
+                case "sortname":
+                    sortByName(request, response);
                 default:
                     listUser(request, response);
                     break;
@@ -67,6 +69,8 @@ public class UserServlet extends HttpServlet {
                 case "edit":
                     updateUser(request, response);
                     break;
+                case "search":
+                    searchByCountry(request, response);
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
@@ -76,9 +80,9 @@ public class UserServlet extends HttpServlet {
     private void listUser(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         List<User> listUser = userDAO.selectAllUsers();
-        request.setAttribute("listUser", listUser);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
-        dispatcher.forward(request, response);
+        request.setAttribute("listUser", listUser); //truyền biến vào request
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");//khai báo trang jsp sẽ chuyển request
+        dispatcher.forward(request, response); //chuyển đi
     }
 
     private void showNewForm(HttpServletRequest request, HttpServletResponse response)
@@ -126,7 +130,31 @@ public class UserServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         userDAO.deleteUser(id);
 
+        //load lại listUser sau khi đã XÓA
         List<User> listUser = userDAO.selectAllUsers();
+        request.setAttribute("listUser", listUser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
+        dispatcher.forward(request, response);
+    }
+    private void sortByName(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException{
+        //biến listUser lúc này đã được sắp xếp theo tên
+        List<User> listUser = userDAO.sortByName();
+        request.setAttribute("listUser", listUser);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
+        dispatcher.forward(request, response);
+    }
+
+    private void searchByCountry(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException{
+        List<User> listUser = null;
+        //lấy tham số country từ request
+        String country = request.getParameter("txtCountry");
+
+        if(country.equals("all")) {
+            listUser = userDAO.selectAllUsers();
+        }else{listUser = userDAO.searchByCountry(country);}
+
         request.setAttribute("listUser", listUser);
         RequestDispatcher dispatcher = request.getRequestDispatcher("user/list.jsp");
         dispatcher.forward(request, response);
